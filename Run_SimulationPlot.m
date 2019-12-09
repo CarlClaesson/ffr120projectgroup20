@@ -1,4 +1,4 @@
-function f = Run_Simulation(N, NAgents, Visibility_range, Agents, Collection_Rate, Regrow_Rate, environment)
+function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, Collection_Rate, Regrow_Rate, environment)
     environment = environment+unifrnd(0,1*Regrow_Rate,N,N);
     for k = 1: NAgents
         AgentPositionX = Agents(1,k);
