@@ -1,4 +1,4 @@
-function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, Collection_Rate, environment)
+function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, environment)
     for k = 1: NAgents
         AgentPositionX = Agents(1,k);
         AgentPositionY = Agents(2,k);
@@ -60,14 +60,17 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, 
 %         Agents(2,k) = NextY(1); % Bug: Sometimes NextY has 2 values, that why we choose index 1
     end
     
-    Collect_Order = randperm(NAgents);
+    %Collect_Order = randperm(NAgents); %random Collection order
+    [~,idx] = sort(Agents(3,:));
+    Agents = Agents(:,idx);
+    Collect_Order = NAgents:-1:1;  % Richer collects first since it is sorted according to least wealth
     for m=1:NAgents
-        Agents(3,Collect_Order(m)) = Agents(3,Collect_Order(m))+Collection_Rate*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
-        environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m))) = (1-Collection_Rate)*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
+        Agents(3,Collect_Order(m)) = Agents(3,Collect_Order(m))+Agents(5,Collect_Order(m))*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
+        environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m))) = (1-Agents(5,Collect_Order(m)))*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
     end
     
     %Make agent consume suger (Metabolic rate)
-    Agents(3,:) = Agents(3,:) - Agents(4,:);
+    Agents(3,:) = max(0,(Agents(3,:) - Agents(4,:)));
     disp(max(Agents(3,:)))
     disp(min(Agents(3,:)))
     f = Agents;
