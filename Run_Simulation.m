@@ -1,5 +1,4 @@
-function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, Collection_Rate, Regrow_Rate, environment)
-    environment = environment+unifrnd(0,1*Regrow_Rate,N,N);
+function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, Collection_Rate, environment)
     for k = 1: NAgents
         AgentPositionX = Agents(1,k);
         AgentPositionY = Agents(2,k);
@@ -66,6 +65,11 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, 
         Agents(3,Collect_Order(m)) = Agents(3,Collect_Order(m))+Collection_Rate*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
         environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m))) = (1-Collection_Rate)*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
     end
+    
+    %Make agent consume suger (Metabolic rate)
+    Agents(3,:) = Agents(3,:) - Agents(4,:);
+    disp(max(Agents(3,:)))
+    disp(min(Agents(3,:)))
     f = Agents;
 end
 
