@@ -32,17 +32,33 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, 
                 end 
             end
         end
+          
         [TargetX,TargetY] = find(Visibility_Matrix == max(max(Visibility_Matrix)));
         TargetX = TargetX+Visibility1X-1;
         TargetY = TargetY+Visibility1Y-1;
-        
-        Position_Sign = sign([TargetX;TargetY]-Agents(1:2,k));
-        Next_Position = [Agents(1,k)+Position_Sign(1),Agents(1,k);Agents(2,k),Agents(2,k)+Position_Sign(2);environment(Agents(1,k)+Position_Sign(1)),environment(Agents(2,k)+Position_Sign(2))];
-        [~,Next_Order] = find(Next_Position == max(Next_Position(3,:)));
-        NextX = Next_Position(1,Next_Order);
-        NextY = Next_Position(2,Next_Order);
-        Agents(1,k) = NextX(1); % Bug: Sometimes NextX has 2 values, that why we choose index 1
-        Agents(2,k) = NextY(1); % Bug: Sometimes NextY has 2 values, that why we choose index 1
+       
+        r = rand;
+        if r < 0.5
+            if  TargetX - Agents(1,k) ~= 0
+                Agents(1,k) = Agents(1,k) + sign(TargetX - Agents(1,k));
+            else
+                Agents(2,k) = Agents(2,k) + sign(TargetY - Agents(2,k));
+            end
+        else
+            if  TargetY - Agents(2,k) ~= 0
+                Agents(2,k) = Agents(2,k) + sign(TargetY - Agents(2,k));
+            else
+                Agents(1,k) = Agents(1,k) + sign(TargetX - Agents(1,k));
+            end
+        end
+%         Not working as intended right now
+%         Position_Sign = sign([TargetX;TargetY]-Agents(1:2,k));
+%         Next_Position = [Agents(1,k)+Position_Sign(1),Agents(1,k);Agents(2,k),Agents(2,k)+Position_Sign(2);environment(Agents(1,k)+Position_Sign(1)),environment(Agents(2,k)+Position_Sign(2))];
+%         [~,Next_Order] = find(Next_Position == max(Next_Position(3,:)));
+%         NextX = Next_Position(1,Next_Order);
+%         NextY = Next_Position(2,Next_Order);
+%         Agents(1,k) = NextX(1); % Bug: Sometimes NextX has 2 values, that why we choose index 1
+%         Agents(2,k) = NextY(1); % Bug: Sometimes NextY has 2 values, that why we choose index 1
     end
     
     Collect_Order = randperm(NAgents);

@@ -2,11 +2,11 @@
 clear all
 clc
 N = 100;
-NAgents = 100;
-Visibility_range = 5; %The visibility is right now a square, change to circle later?
+NAgents = 4;
+Visibility_range = 5;
 Agents = [round(unifrnd(1,N,2,NAgents));zeros(1,NAgents)]; %Every column represent an Agent. First row: position x, Second row: position in y, Third row: wealth.
 Collection_Rate = 0.8;
-Regrow_Rate = 0.01;
+Regrow_Rate = 0.05;
 environment = unifrnd(0,1,N,N);
 
 fig = figure;
