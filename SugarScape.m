@@ -23,13 +23,29 @@ Collection_rate_vector = (Upper_Limit_Collection_Rate-Lower_Limit_Collection_Rat
 Agents = [round(unifrnd(1,N,2,NAgents));zeros(1,NAgents); Metabolic_rate_vector; Collection_rate_vector]; 
 
 Regrow_Rate = 0.01;
-environment = unifrnd(0,1,N,N);
+
+numberOfPatches = 4;
+xSpots = randi(N,numberOfPatches,1);
+ySpots = randi(N,numberOfPatches,1);
+environment = zeros(N);
+environment = landscapeGrowing(N,xSpots,ySpots,numberOfPatches,environment);   
+initialEnvironment = environment;
+
 fig = figure;
 filename = sprintf('agentsEvolution.gif');
 %%
 for i = 1:1000
-    environment = environment+unifrnd(0,1*Regrow_Rate,N,N);
+    environment = environment+Regrow_Rate*landscapeGrowing(N,xSpots,ySpots,numberOfPatches,environment);
+    for idx1 = 1:N
+        for idx2 = 1:N
+            if(environment(idx1,idx2)>initialEnvironment(idx1,idx2))
+                environment(idx1,idx2) = initialEnvironment(idx1,idx2);
+            end
+        end
+    end
+    
     [Agents,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, environment);
+    
     Map = imagesc(environment,[0.0 1.0]);
     colormap(autumn()) 
     freezeColors
