@@ -5,12 +5,12 @@ N = 100;
 NAgents = 100;
 Visibility_range = 3;
 
-Lower_Limit_Metabolic_Rate = 0.2;
-Upper_Limit_Metabolic_Rate = 0.4;
+Lower_Limit_Metabolic_Rate = 0.01;
+Upper_Limit_Metabolic_Rate = 0.1;
 Metabolic_rate_vector = (Upper_Limit_Metabolic_Rate-Lower_Limit_Metabolic_Rate).*rand(1,NAgents)...
     + Lower_Limit_Metabolic_Rate;
 
-Lower_Limit_Collection_Rate = 0.6;
+Lower_Limit_Collection_Rate = 0.1;
 Upper_Limit_Collection_Rate = 0.9;
 Collection_rate_vector = (Upper_Limit_Collection_Rate-Lower_Limit_Collection_Rate).*rand(1,NAgents)...
     + Lower_Limit_Collection_Rate;
@@ -20,10 +20,9 @@ Collection_rate_vector = (Upper_Limit_Collection_Rate-Lower_Limit_Collection_Rat
 %Every column represent an Agent. First row: position x, Second row:
 %position in y, Third row: wealth. Forth row: metabolic rate, Fith row:
 % Collection_Rate, sixth 
-Agents = [round(unifrnd(1,N,2,NAgents));zeros(1,NAgents); Metabolic_rate_vector; Collection_rate_vector; zeros(1,NAgents)]; 
-
+Agents = [round(unifrnd(1,N,2,NAgents));10.*ones(1,NAgents); Metabolic_rate_vector; Collection_rate_vector; zeros(1,NAgents)]; 
 Regrow_Rate = 0.01;
-Tax_Rate =0.3;
+Tax_Rate =0.1;
 
 numberOfPatches = 4;
 xSpots = randi(N,numberOfPatches,1);
@@ -52,12 +51,13 @@ for i = 1:1000
         end
     end
     
-    [Agents,environment] = Run_Simulation(N, NAgents, Visibility_range, Tax_Rate, Agents, environment);
+    [Agents,environment, NDeaths] = Run_Simulation(N, NAgents, Visibility_range, Tax_Rate, Agents, environment);
     
     richClass(i) = sum(Agents(6,:)==2);
     mediumClass(i) = sum(Agents(6,:)==1);
     lowClass(i) = sum(Agents(6,:)==0);
     
    plotWealth(richClass,mediumClass,lowClass,i)
+   disp(NDeaths)
    % plotEvolution(Agents,environment,filename,plotname,fig)   
 end    

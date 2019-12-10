@@ -1,5 +1,6 @@
-function [f,environment] = Run_Simulation(N, NAgents, Visibility_range,Tax_Rate,Agents, environment)
-    for k = 1: NAgents
+function [agents,environment, NDeaths] = Run_Simulation(N, NAgents, Visibility_range,Tax_Rate,Agents, environment)
+    currentNAgents = length(Agents);
+    for k = 1: currentNAgents
         AgentPositionX = Agents(1,k);
         AgentPositionY = Agents(2,k);
         AgentPositionXInVM = Visibility_range + 1;
@@ -64,24 +65,34 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range,Tax_Rate,
     %Collect_Order = randperm(NAgents); %random Collection order
     [~,idx] = sort(Agents(3,:));
     Agents = Agents(:,idx);
-    Collect_Order = NAgents:-1:1;  % Richer collects first since it is sorted according to least wealth
-    for m=1:NAgents
+    Collect_Order = currentNAgents:-1:1;  % Richer collects first since it is sorted according to least wealth
+    for m=1:currentNAgents
         Agents(3,Collect_Order(m)) = Agents(3,Collect_Order(m))+(1-Tax_Rate)*Agents(5,Collect_Order(m))*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
         Taxes = Taxes + Tax_Rate*Agents(5,Collect_Order(m))*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
         environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m))) = (1-Agents(5,Collect_Order(m)))*environment(Agents(1,Collect_Order(m)),Agents(2,Collect_Order(m)));
     end
     
     %Distribute_Taxes
-    for i = 1:NAgents/3
-        Agents(3,i) = Agents(3,i) + Taxes/(NAgents/3);
+    for i = 1:currentNAgents/3
+        Agents(3,i) = Agents(3,i) + Taxes/(currentNAgents/3);
     end
-    
     %Make agent consume suger (Metabolic rate)
     Agents(3,:) = max(0,(Agents(3,:) - Agents(4,:)));
-
+    %disp(max(Agents(3,:)))
+    %disp(min(Agents(3,:)))
+    
+    %Kill agents with zero 
+    killList = find(Agents(3,:) == 0);
+    if ~isempty(killList)
+        for i =1:killList
+            Agents(:,i) = [];
+        end
+    end
+    currentNAgents = length(Agents);
+    NDeaths = NAgents - currentNAgents;
     %Classify the agents
     richestPerson = max(Agents(3,:));
-    for idx = 1:NAgents
+    for idx = 1:length(Agents)
         if(Agents(3,idx)>0.7*richestPerson)
             Agents(6,idx)=2;   
         else
@@ -92,6 +103,6 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range,Tax_Rate,
             end
         end
     end
-    f = Agents;
+    agents = Agents;
 end
 
