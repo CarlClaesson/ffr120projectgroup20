@@ -34,11 +34,11 @@ initialEnvironment = environment;
 
 fig = figure;
 filename = sprintf('agentsEvolution.gif');
-plotname = sprintf('Agents Evolution for V=%d; A=%d',Visibility_range,NAgents);
+plotname = sprintf('Class classification V=%d; A=%d',Visibility_range,NAgents);
 %%
 for i = 1:1000
-    if(mod(i,100)==0)
-        position = position-1/10; %Represent the position of the environment [2,3]
+    if(mod(i,10)==0)
+        position = position-1/100; %Represent the position of the environment [2,3]
         auxEnvironment = landscapeGrowingGaussian(N,xSpots,ySpots,numberOfPatches,environment,position);   
         initialEnvironment = auxEnvironment;
     end
@@ -57,7 +57,17 @@ for i = 1:1000
     mediumClass(i) = sum(Agents(6,:)==1);
     lowClass(i) = sum(Agents(6,:)==0);
     
-   plotWealth(richClass,mediumClass,lowClass,i)
-   disp(NDeaths)
-   % plotEvolution(Agents,environment,filename,plotname,fig)   
+   %plotWealth(richClass,mediumClass,lowClass,i,plotname);
+   %disp(NDeaths)
+   %plotname = sprintf('Class classification V=%d; A=%d\n T=%d',Visibility_range,NAgents,i); %Just for the GIF
+   %plotEvolution(Agents,environment,filename,plotname,fig,i); 
+   %vectorDeaths(i) = NDeaths;
+   %plotDeaths(vectorDeaths,i,plotname);
+   
+   %Just to calculate the difference between classes
+    k = find(Agents(6,:)==0);
+    lowClassResources(i) = mean(Agents(3,k));
+    k = find(Agents(6,:)==2);
+    highClassResources(i) = mean(Agents(3,k));
+    plotDifference(lowClassResources,highClassResources,plotname);
 end    

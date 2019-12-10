@@ -1,16 +1,22 @@
-function plotEvolution(Agents,environment,filename,plotname,fig)
+function plotEvolution(Agents,environment,filename,plotname,fig,i)
     Map = imagesc(environment,[0.0 1.0]);
     colormap(autumn()) ;
     freezeColors
     hold on;
-    Normalize = max(Agents(3,:));
-    Wealth = scatter(Agents(2,:),Agents(1,:),[],Agents(3,:)/Normalize,'filled');
-    colormap(winter());
+    k = find(Agents(6,:)==0);
+    Wealth = scatter(Agents(2,k),Agents(1,k),[],'black','filled');
+    k = find(Agents(6,:)==1);
+    Wealth = scatter(Agents(2,k),Agents(1,k),[],'green','filled');
+    k = find(Agents(6,:)==2);
+    Wealth = scatter(Agents(2,k),Agents(1,k),[],'blue','filled');
     hold off;
     axis ([1 100 1 100]);
     axis off;
     title(plotname);
-    %colorbar
+    legend('Low class','Medium class','High class','Location','Southoutside','Orientation','Horizontal')
+    legend boxoff
+    h = colorbar;
+    set(get(h,'title'),'string','Resources');
     drawnow;
     
     
