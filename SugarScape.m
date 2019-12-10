@@ -28,14 +28,21 @@ numberOfPatches = 4;
 xSpots = randi(N,numberOfPatches,1);
 ySpots = randi(N,numberOfPatches,1);
 environment = zeros(N);
-environment = landscapeGrowing(N,xSpots,ySpots,numberOfPatches,environment);   
+position = 3; %Represent the position of the environment [2,3]
+environment = landscapeGrowingGaussian(N,xSpots,ySpots,numberOfPatches,environment,position);   
 initialEnvironment = environment;
 
 fig = figure;
 filename = sprintf('agentsEvolution.gif');
+plotname = sprintf('Agents Evolution for V=%d; A=%d',Visibility_range,NAgents);
 %%
 for i = 1:1000
-    environment = environment+Regrow_Rate*landscapeGrowing(N,xSpots,ySpots,numberOfPatches,environment);
+    if(mod(i,100)==0)
+        position = position-1/10; %Represent the position of the environment [2,3]
+        auxEnvironment = landscapeGrowingGaussian(N,xSpots,ySpots,numberOfPatches,environment,position);   
+        initialEnvironment = auxEnvironment;
+    end
+    environment = environment+Regrow_Rate*landscapeGrowingGaussian(N,xSpots,ySpots,numberOfPatches,environment,position);
     for idx1 = 1:N
         for idx2 = 1:N
             if(environment(idx1,idx2)>initialEnvironment(idx1,idx2))
@@ -46,26 +53,10 @@ for i = 1:1000
     
     [Agents,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, environment);
     
-    Map = imagesc(environment,[0.0 1.0]);
-    colormap(autumn()) 
-    freezeColors
-    hold on;
-    Normalize = max(Agents(3,:));
-    Wealth = scatter(Agents(2,:),Agents(1,:),[],Agents(3,:)/Normalize,'filled');
-    colormap(winter())
-    hold off;
-    axis ([1 100 1 100])
-    title(['Agents Evolution'])
-    %colorbar
-    drawnow;
+    richClass(i) = sum(Agents(6,:)==2);
+    mediumClass(i) = sum(Agents(6,:)==1);
+    lowClass(i) = sum(Agents(6,:)==0);
     
-    frame = getframe(fig);
-    im = frame2im(frame);
-    [imind1,cm]=rgb2ind(im,256);
-    
-    if i==1
-        imwrite(imind1,cm,filename,'gif','Loopcount',inf);
-    else
-        imwrite(imind1,cm,filename,'gif','WriteMode','append');
-    end
+    plotWealth(richClass,mediumClass,lowClass,i)
+    %plotEvolution(Agents,environment,filename,plotname,fig)   
 end    

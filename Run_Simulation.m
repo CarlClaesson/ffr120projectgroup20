@@ -71,8 +71,21 @@ function [f,environment] = Run_Simulation(N, NAgents, Visibility_range, Agents, 
     
     %Make agent consume suger (Metabolic rate)
     Agents(3,:) = max(0,(Agents(3,:) - Agents(4,:)));
-    disp(max(Agents(3,:)))
-    disp(min(Agents(3,:)))
+    
+    %Classify the agents
+    richestPerson = max(Agents(3,:));
+    N = length(Agents);
+    for idx = 1:N
+        if(Agents(3,idx)>0.7*richestPerson)
+            Agents(6,idx)=2;   
+        else
+            if(Agents(3,idx)>0.3*richestPerson)
+                Agents(6,idx)=1;
+            else
+                Agents(6,idx)=0;
+            end
+        end
+    end
     f = Agents;
 end
 
