@@ -73,8 +73,8 @@ function [agents,environment, NDeaths] = Run_Simulation(N, NAgents, Visibility_r
     end
     
     %Distribute_Taxes
-    for i = 1:currentNAgents/3
-        Agents(3,i) = Agents(3,i) + Taxes/(currentNAgents/3);
+    for i = 1:currentNAgents/4
+        Agents(3,i) = Agents(3,i) + Taxes/(currentNAgents/4);
     end
     %Make agent consume suger (Metabolic rate)
     Agents(3,:) = max(0,(Agents(3,:) - Agents(4,:)));
@@ -91,15 +91,29 @@ function [agents,environment, NDeaths] = Run_Simulation(N, NAgents, Visibility_r
     currentNAgents = length(Agents);
     NDeaths = NAgents - currentNAgents;
     %Classify the agents
-    richestPerson = max(Agents(3,:));
+%     richestPerson = max(Agents(3,:));
+%     for idx = 1:length(Agents)
+%         if(Agents(3,idx)>0.7*richestPerson)
+%             Agents(6,idx)=2;   
+%         else
+%             if(Agents(3,idx)>0.3*richestPerson)
+%                 Agents(6,idx)=1;
+%             else
+%                 Agents(6,idx)=0;
+%             end
+%         end
+%     end
+    
+    %Classify Agents (Diffrent approch)
+    averageWealth = sum(Agents(3,:))/length(Agents(3,:));
     for idx = 1:length(Agents)
-        if(Agents(3,idx)>0.7*richestPerson)
+        if(Agents(3,idx)>3*averageWealth)
             Agents(6,idx)=2;   
         else
-            if(Agents(3,idx)>0.3*richestPerson)
-                Agents(6,idx)=1;
-            else
+            if(Agents(3,idx)<0.7*averageWealth)
                 Agents(6,idx)=0;
+            else
+                Agents(6,idx)=1;
             end
         end
     end
