@@ -75,4 +75,5 @@ for i = 1:10000
 end  
 AverageWealth = sum(Agents(3,:))/length(Agents(3,:));
 MedianWealth = median(Agents(3,:));
-plotHistogram(Agents(3,:), AverageWealth, MedianWealth)
+plotHistogram(Agents(3,:), AverageWealth, MedianWealth,((NAgents - length(Agents))/NAgents), Tax_Rate, NAgents)
+
