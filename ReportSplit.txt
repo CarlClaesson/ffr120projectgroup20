@@ -1,0 +1,11 @@
+-Abstract and Introduction______________________________________________________________________________________________(Xi Chen) Presentation->1:00 min	 				
+-Explain the general model______________________________________________________________________________________________(Xi Chen) Presentation->1:00 min
+-Plot of the model (GIF) and explanation of the parameters (mention the regrow rate)____________________________________(Daniel)  Presentation->1:30 min
+-Study of the parameters:
+	1) Visibility range (just GIF movement of the agents changes)___________________________________________________(Daniel)  Presentation->30 sec
+	2) Metabolic Rate and Collection Rate study of how them affect the results (histograms and maybe difference)____(Silin)	  Presentation->1 min
+	3) Taxes (Histograms and death rate studies)____________________________________________________________________(Carl)	  Presentation->1:30 min
+	4) Population size+Size Rate(overpopulation)____________________________________________________________________(Carl)    Presentation->1:30 min
+-Discussion of the results______________________________________________________________________________________________()	  Presentation->0 min											 
+-Conclusion_____________________________________________________________________________________________________________(Silin)   Presentation->1 min (depending on the time)
+																	  TOTAL:9 min		
